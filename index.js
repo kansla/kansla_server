@@ -1,11 +1,26 @@
-const express = require('express')
-const path = require('path')
+const express = require('express');
+const path = require('path');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+const mysql = require("mysql");
+const dbconfig = require("./config/dbconfig");
+
+var registerRouter = require('./routes/register');
+var loginRouter = require('./routes/login');
+var modifiRouter = require('./routes/modify');
+
+//app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+//app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+const conn = mysql.createConnection(dbconfig);
 
 app.set('port', (process.env.PORT || 5000));
-
+app.use('/register', registerRouter);
+app.use('/login', loginRouter);
+app.use('/modify',modifiRouter);
 app.use(express.static(__dirname + '/public'));
 
 // views is directory for all template files
@@ -38,6 +53,8 @@ io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     console.log("Message " + msg['message']);
     console.log("보내는 메세지 : ",msg['roomName']);
+    console.log("Script:",msg['script']);
+    msg.emotion = 1;
     io.to(msg['roomName']).emit('chat message', msg);
   });
 });
