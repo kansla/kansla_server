@@ -44,7 +44,10 @@ router.post("/", function (req, res, next)  {
     conn.query(
         `update kansla_db.users set email="${email}", pwd="${pwd}",name="${name}",birth="${birth}",status_msg="${status_msg}" where email="${origin}";`,
         function (err, rows, field) {
-            if (err)  res.status(204).send({"code":204});
+            if (err){
+                res.status(204).send({"code":204});
+                console.log(err);  
+            } 
             else{
                 res.send({"code": 200});
             }

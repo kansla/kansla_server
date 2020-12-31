@@ -9,6 +9,7 @@ const dbconfig = require("./config/dbconfig");
 var registerRouter = require('./routes/register');
 var loginRouter = require('./routes/login');
 var modifiRouter = require('./routes/modify');
+var friendRouter = require('./routes/friend');
 
 //app.use(logger('dev'));
 app.use(express.json());
@@ -21,6 +22,7 @@ app.set('port', (process.env.PORT || 5000));
 app.use('/register', registerRouter);
 app.use('/login', loginRouter);
 app.use('/modify',modifiRouter);
+app.use('/friend',friendRouter);
 app.use(express.static(__dirname + '/public'));
 
 // views is directory for all template files
