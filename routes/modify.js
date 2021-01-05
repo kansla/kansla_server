@@ -10,7 +10,7 @@ router.post('/check_pwd',function(req,res,next){
     let pwd = data.pwd;
 
     conn.query(
-        `select pwd from kansla_db.users where email = "${email}";`,
+        `select pwd from kansla.users where email = "${email}";`,
         function (err, rows, field) {
             if (err)  res.status(204).send({"code":204});
             if(rows.length == 0){
@@ -42,7 +42,7 @@ router.post("/", function (req, res, next)  {
     let image = data.image;
 
     conn.query(
-        `update kansla_db.users set email="${email}", pwd="${pwd}",name="${name}",birth="${birth}",status_msg="${status_msg}" where email="${origin}";`,
+        `update kansla.users set email="${email}", pwd="${pwd}",name="${name}",birth="${birth}",status_msg="${status_msg}" where email="${origin}";`,
         function (err, rows, field) {
             if (err){
                 res.status(204).send({"code":204});

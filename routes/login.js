@@ -11,7 +11,7 @@ router.post("/", function (req, res, next)  {
     let pwd = data.pwd;
 
     conn.query(
-        `select * from kansla_db.users where email = "${email}";`,
+        `select * from kansla.users where email = "${email}";`,
         function (err, rows, field) {
         if (err)  res.status(204).send({"code":204});
         if(rows.length == 0){
@@ -20,17 +20,20 @@ router.post("/", function (req, res, next)  {
         else{   
             if (rows[0].pwd == pwd) {
                 console.log("pass");
-                res.status(200).json({"name":rows[0].name,"birth":rows[0].birth,"status_msg":rows[0].status_msg});
+                console.log(rows.email);
+                if (rows.status_msg = null){
+                    res.status(200).json({"name":rows[0].name,"birth":rows[0].birth,"status_msg":""});
+                }
+                else{
+                    res.status(200).json({"name":rows[0].name,"birth":rows[0].birth,"status_msg":rows[0].status_msg});
+                }
             }
             else{
                 res.status(204).send({"code":204}); 
             }
         }
     } 
-        
     );
-    
-    
 });
 
 module.exports = router;

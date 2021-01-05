@@ -34,7 +34,7 @@ router.post("/check_email", function (req, res, next)  {
   let email = data.email;
 
   conn.query(
-      `select email from kansla_db.users where email = "${email}";`,
+      `select email from kansla.users where email = "${email}";`,
       function (err, rows, field) {
           if (err)  res.status(204).send({"code":204});
           if(rows.length == 0){
