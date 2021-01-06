@@ -19,40 +19,47 @@ router.post("/friend_req", function (req, res, next)  {
         if (err) {
             console.log(err);
         }
+        try{
         first_user_id = rows[0].user_id;
         console.log(first_user_id);
         second_user_id = rows[1].user_id;
+        }
+        catch(e){
+          console.log(e);
+          res.status(204).send({"code":204});
+          return;
+        }
         conn.query(
-          `INSERT INTO friend(first_user, second_user) values(?, ?)`,
-          [first_user_id,second_user_id],
+          `select friend_id from friend where ${first_user_id} in(first_user,second_user) and ${second_user_id} in (first_user,second_user); `,
           function (err, rows, field) {
             if (err) {
                 console.log(err);
-                res.send({"code": 200});
+                res.status(204).send({"code":204});
             }
-            conn.query(
-              `SELECT LAST_INSERT_ID()`,
-              function (err, rows, field) {
-                if (err) {
-                    console.log(err);
+            else{
+                if(rows.length>0){
+                  res.status(204).send({"code":204})
                 }
-                conn.query(
-                  `INSERT INTO room(room_id, last_msg) values(?, ?);`,
-                  [rows[0].LAST_INSERT_ID(),""],
-                  function (err, rows, field) {
-                    if (err) {
-                        console.log(err);
+                else{
+                  conn.query(
+                    `INSERT INTO friend(first_user, second_user) values(?, ?)`,
+                    [first_user_id,second_user_id],
+                    function (err, rows, field) {
+                      if (err) {
+                          console.log(err);
+                          res.status(204).send({"code": 204});
+                      }
+                      console.log(rows[0]);
+                      //여기서 응답
+                      //res.redirect("/");
+                      res.json({code:200});
                     }
-                  }
-                );
-              }
-            );
-            console.log(rows[0]);
-            //여기서 응답
-            //res.redirect("/");
-            res.json({code:200});
+                  );
+                }
+            }
           }
         );
+        
       }
     );
 });

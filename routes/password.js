@@ -14,7 +14,7 @@ router.post("/", function (req, res, next)  {
         function (err, rows, field) {
           if (err) {
               console.log(err);
-              res.json(null);
+              res.status(204).send({"code": 204});
           }
           console.log(rows[0]);
           //여기서 응답

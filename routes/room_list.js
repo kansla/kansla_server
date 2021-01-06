@@ -19,6 +19,7 @@ router.post("/", function (req, res, next)  {
           console.log(rows[0]);
           let user_id = rows[0].user_id;
           conn.query(
+            //`select users.name,users.email from kansla.users where users.user_id in (select second_user from friend where first_user= ${user_id} and friend_id in (select room_id from room where room_id in (select friend.friend_id from friend where ${user_id} = friend.first_user or ${user_id} = friend.second_user))) or users.user_id in (select first_user from friend where second_user= ${user_id} and friend_id in (select room_id from room where room_id in (select friend.friend_id from friend where ${user_id} = friend.first_user or ${user_id} = friend.second_user)));`,
             `select * from room where room_id in (select friend.friend_id from friend where ${user_id} = friend.first_user or ${user_id} = friend.second_user);`,
             function (err, rows, field) {
               if (err) {
@@ -36,7 +37,7 @@ router.post("/", function (req, res, next)  {
           );
 
           conn.query(
-            `select users.name,users.email from kansla.users where users.user_id in (select second_user from friend where first_user=${user_id}) or users.user_id in (select first_user from friend where second_user=${user_id});`,
+            `select users.name,users.email from kansla.users where users.user_id in (select second_user from friend where first_user= ${user_id} and friend_id in (select room_id from room where room_id in (select friend.friend_id from friend where ${user_id} = friend.first_user or ${user_id} = friend.second_user))) or users.user_id in (select first_user from friend where second_user= ${user_id} and friend_id in (select room_id from room where room_id in (select friend.friend_id from friend where ${user_id} = friend.first_user or ${user_id} = friend.second_user)));`,
             function (err, rows, field) {
               if (err) {
                   console.log(err);
